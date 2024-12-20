@@ -30,23 +30,22 @@ bench_result = benchmark_language_model(model, tokenizer, [input_prompt])
 
 The `bench_result` will return a dictionary containing the benchmark results. Example:
 ```json
-{
-    'median_tps': 15.821,
-    'mean_tps': 15.821,
-    'min_tps': 15.821,
-    'max_tps': 15.821,
-    'median_ttft_seconds': 0.053,
-    'mean_ttft_seconds': 0.053,
-    'min_ttft_seconds': 0.053,
-    'max_ttft_seconds': 0.053,
-    'median_gpu_usage_mb': 1445.0,
-    'mean_gpu_usage_mb': 1445.0,
-    'min_gpu_usage_mb': 1445.0,
-    'max_gpu_usage_mb': 1445.0
- }
+{'median_decode_tps': 29.985,
+ 'mean_decode_tps': 25.269,
+ 'median_tps': 37.19,
+ 'mean_tps': 31.207,
+ 'median_ttft_seconds': 0.002,
+ 'mean_ttft_seconds': 0.048,
+ 'median_gpu_usage_mb': 1445.0,
+ 'mean_gpu_usage_mb': 1445.0}
 ```
+
+### Reference Notebook
+
+You can refer to this Colab notebook for a detailed example of using the code for performance benchmarking:
+
+[Colab Notebook: Performance Benchmarking](https://colab.research.google.com/drive/1OTf3v3kJepj7j_XwIQDrNTdKjxbbR1V-?usp=sharing)
 
 ---
 
-Feel free to customize and extend the script as needed for your benchmarking purposes!
-
+Feel free to customize and extend the script as needed for your benchmarking purposes :)
