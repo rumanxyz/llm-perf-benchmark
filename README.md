@@ -28,7 +28,7 @@ bench_result = benchmark_language_model(model, tokenizer, [input_prompt])
 
 ### Example Output
 
-The `bench_result` will return a dictionary containing the benchmark results. Example:
+The `benchmark_language_model` will return a dictionary containing the benchmark results. Example:
 ```json
 {'median_decode_tps': 29.985,
  'mean_decode_tps': 25.269,
