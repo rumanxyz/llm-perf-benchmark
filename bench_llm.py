@@ -140,6 +140,7 @@ def benchmark_single_prompt(
             # Record time to first token
             if first_token_time is None:
                 first_token_time = time.time() - generation_start_time
+                first_token_start_time = time.time()
 
             # Accumulate tokens
             generated_decoded_tokens.append(token)
@@ -151,6 +152,9 @@ def benchmark_single_prompt(
 
     # Stop GPU monitoring
     gpu_monitor.stop()
+
+    # Only Decoding (generation) metric
+    generation_time = time.time() - first_token_start_time
 
     # Total generation metrics
     total_generation_time = time.time() - generation_start_time
@@ -170,6 +174,7 @@ def benchmark_single_prompt(
         'input_tokens': input_tokens,
         'output_tokens': output_tokens,
         'tokens_per_second': output_tokens / total_generation_time,
+        'output_decode_tokens_per_second': (output_tokens - input_tokens) / generation_time,
         'input_process_time_seconds': input_process_time,
         'peak_gpu_memory_mb': peak_gpu_usage,
         # 'generated_text': " ".join(generated_decoded_tokens)
@@ -220,6 +225,7 @@ def benchmark_language_model(
         return {}
 
     # Extract metric lists for aggregation
+    decode_tps_list = [result['output_decode_tokens_per_second'] for result in prompt_results]
     tps_list = [result['tokens_per_second'] for result in prompt_results]
     ttft_list = [result['time_to_first_token_seconds'] for result in prompt_results]
     gpu_usage_list = [result['peak_gpu_memory_mb'] for result in prompt_results]
@@ -230,22 +236,20 @@ def benchmark_language_model(
         # 'prompt_results': prompt_results,
 
         # Tokens Per Second (TPS) metrics
+        'median_decode_tps': round(np.median(decode_tps_list), 3),
+        'mean_decode_tps': round(np.mean(decode_tps_list), 3),
+
+        # Tokens Per Second (TPS) metrics
         'median_tps': round(np.median(tps_list), 3),
         'mean_tps': round(np.mean(tps_list), 3),
-        'min_tps': round(np.min(tps_list), 3),
-        'max_tps': round(np.max(tps_list), 3),
 
         # Time to First Token (TTFT) metrics
         'median_ttft_seconds': round(np.median(ttft_list), 3),
         'mean_ttft_seconds': round(np.mean(ttft_list), 3),
-        'min_ttft_seconds': round(np.min(ttft_list), 3),
-        'max_ttft_seconds': round(np.max(ttft_list), 3),
 
         # GPU Usage metrics
         'median_gpu_usage_mb': round(np.median(gpu_usage_list), 3),
-        'mean_gpu_usage_mb': round(np.mean(gpu_usage_list), 3),
-        'min_gpu_usage_mb': round(np.min(gpu_usage_list), 3),
-        'max_gpu_usage_mb': round(np.max(gpu_usage_list), 3)
+        'mean_gpu_usage_mb': round(np.mean(gpu_usage_list), 3)
     }
 
     return aggregate_results
